@@ -1,0 +1,1016 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.567, 48.140]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0001",
+          "name": "Munich House of Artists at Lenbachplatz",
+          "category": ["Art", "Design"],
+          "city": "Munich",
+          "country": "Germany",
+          "description": "Art, culture & enjoyment are the guiding principles of the varied cultural programme at the Munich Künstlerhaus on Lenbachplatz. Concerts, lectures, cabaret, theatre performances, festivals and art exhibitions take place here. Since its inauguration in 1900 by Prince Regent Luitpold of Bavaria, the Künstlerhaus has fulfilled the main idea of its founding fathers: it serves as a meeting place for artists and society. The neo-Renaissance building, designed by Gabriel von Seidl in the spirit of historicism, became a historical monument to the turn of the century."
+        },
+        "online": {
+          "website": "https://www.kuenstlerhaus-muc.de/",
+          "digital_exhibition": "https://my.matterport.com/show/?m=BVD9tJkKDRi",
+          "social_links": ["https://www.instagram.com/kuenstlerhausmuc/"],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "Lenbachplatz 8, 80333 München, Germany",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+      {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.583, 48.130]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0107",
+          "name": "Deutsches Museum",
+          "category": ["Science", "Technology"],
+          "city": "Munich",
+          "country": "Germany",
+          "description": "One of the world's largest science and technology museums."
+        },
+        "online": {
+          "website": "https://www.deutsches-museum.de/",
+          "digital_exhibition": "https://digital.deutsches-museum.de/",
+          "social_links": ["https://instagram.com/deutschesmuseum"],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "Museumsinsel 1, 80538 München, Germany",
+          "opening_hours": "Tue–Sun 09:00–17:00",
+          "ticket_info": "Adults €15; Students €8",
+          "transport": {
+            "nearest_station": "Isartor (S-Bahn)",
+            "parking": "Parkhaus Museuminsel"
+          },
+          "event": "Lange Nacht der Museen 2024"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.589, 48.131]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0003",
+          "name": "Haus des Deutschen Ostens (House of the German East)",
+          "category": ["History"],
+          "city": "Munich",
+          "country": "Germany",
+          "description": "The Haus des Deutschen Ostens (HDO) in Munich, founded in 1970, documents the culture, history and regional studies of Germans from Central, Eastern and South-Eastern Europe. It offers exhibitions, readings, lectures and seminars and is a meeting place for the citizens of Bavaria and international guests. With over 75,000 media units in its specialised library, the HDO makes an important contribution to preserving and communicating the cultural heritage of displaced persons and late repatriates."
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.598, 48.128]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0004",
+          "name": "Lothringer 13 (Hall for International Contemporary Art)",
+          "category": ["Art", "Design"],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.573, 48.134]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0005",
+          "name": "Architekturgalerie (Architecture Gallery)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.578, 48.139]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0006",
+          "name": "Münchner Kaiserburg im Alten Hof (Munich Imperial Castle in the Old Courtyard)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.572, 48.147]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0007",
+          "name": "Pinakothek der Moderne (Pinacotheca of the Modern)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.561, 48.249]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0008",
+          "name": "Staatsgalerie im Neuen Schloss Schleißheim - Europäische Barockmalerei (State Gallery in the New Schleißheim Palace - European Baroque Painting)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.559, 48.249]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0009",
+          "name": "Altes Schloss Schleißheim - Das Gottesjahr und seine Feste - Ökumenische Sammlung Gertrud Weinhold (Old Schleißheim Castle - The Year of God and its Festivals - Ecumenical Collection Gertrud Weinhold)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.560, 48.250]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0010",
+          "name": "Altes Schloss Schleißheim - Es war ein Land - Sammlung zur Landeskunde Ost- und Westpreußens (Altes Schloss Schleißheim - Collection on the regional studies of East and West Prus",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.600, 48.184]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0011",
+          "name": "Städtisches Atelierhaus am Domagkpark / Domagkateliers (Municipal studio house at Domagkpark / Domagkateliers)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.319, 48.167]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0012",
+          "name": "Pfefferminzmuseum (Peppermint Museum)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.665, 48.064]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0013",
+          "name": "Otto-König-von-Griechenland-Museum (Otto King of Greece Museum)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.571, 48.150]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0014",
+          "name": "Neue Pinakothek (New Pinacotheca)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.480, 48.145]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0015",
+          "name": "Diabetesmuseum München (Diabetes Museum Munich) Special features:Free entry. Accessibility",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.599, 48.133]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0016",
+          "name": "Üblacker Häusl",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.569, 48.250]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0017",
+          "name": "Altes Schloss Schleißheim (Old Schleißheim Castle)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.582, 48.135]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0018",
+          "name": "Valentin-Karlstadt-Musäum (Valentin Karlstadt Museum)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.578, 48.144]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0019",
+          "name": "Cuvilliés-Theater in der Residenz München (Cuvilliés Theater in the Munich Residence)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.508, 48.157]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0020",
+          "name": "Marstallmuseum auf Schloss Nymphenburg (Marstallmuseum at Nymphenburg Palace)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.432, 48.260]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0021",
+          "name": "Schloss Dachau (Dachau Castle)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.503, 48.158]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0022",
+          "name": "Museum Nymphenburger Porzellan auf Schloss Nymphenburg (Nymphenburg Porcelain Museum)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.577, 48.142]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0023",
+          "name": "Residenzmuseum in der Residenz München (Residenzmuseum in the Munich Residence)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.503, 48.158]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0024",
+          "name": "Schlosspark Nymphenburg (Nymphenburg Palace Gardens)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.569, 48.133]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0025",
+          "name": "Münchner Feuerwehrausstellung (Munich Fire Brigade Exhibition)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.667, 48.075]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0026",
+          "name": "Apothekarium Neubiberg",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.733, 48.112]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0027",
+          "name": "Museum Haus der Donauschwaben (Museum House of the Danube Swabians)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.602, 48.103]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0028",
+          "name": "MVG Museum (Munich Transport Company Museum)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.546, 48.131]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0029",
+          "name": "Ruhmeshalle und Bavaria (Hall of Fame and Bavaria)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [11.581, 48.148]
+      },
+      "properties": {
+        "general": {
+          "id": "mun-0030",
+          "name": "Bayerische Staatsbibliothek (Bavarian State Library)",
+          "category": [],
+          "city": "Munich",
+          "country": "Germany",
+          "description": ""
+        },
+        "online": {
+          "website": "",
+          "digital_exhibition": "",
+          "social_links": [""],
+          "vr_experience": ""
+        },
+        "offline": {
+          "address": "?",
+          "opening_hours": "?",
+          "ticket_info": "?",
+          "transport": {
+            "nearest_station": "?",
+            "parking": "?"
+          },
+          "event": "?"
+        }
+      }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Europe",
+        "level": 1,
+        "count": "Total Museums: 5000+",
+        "color": "#2a9d8f"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-10.0, 35.0], [40.0, 35.0], [40.0, 70.0], [-10.0, 70.0], [-10.0, 35.0]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Germany",
+        "level": 2,
+        "count": "Germany: 800 Museums",
+        "color": "#e9c46a"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [6.0, 47.0], [15.0, 47.0], [15.0, 55.0], [6.0, 55.0], [6.0, 47.0]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Munich",
+        "level": 3,
+        "count": "Munich: 100+ Museums",
+        "color": "#f4a261"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [11.36, 48.06], [11.72, 48.06], [11.72, 48.25], [11.36, 48.25], [11.36, 48.06]
+        ]]
+      }
+    }
+  ]
+}

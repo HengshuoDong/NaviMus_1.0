@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="/cesium/Widgets/widgets.css">
+    <script src="/cesium/Cesium.js"></script>
+
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/earth-svgrepo-com.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NaviMus</title>
+    <!-- <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script> -->
+    <script src="./src/live2dcubismcore.min.js"></script>
+
+    <!-- <script src="https://cdn.jsdelivr.net/gh/dylanNew/live2d/webgl/Live2D/lib/live2d.min.js"></script> -->
+    <script src="./src/live2d.min.js"></script>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/pixi.js@6.5.2/dist/browser/pixi.min.js"></script> -->
+    <script src="./src/pixi.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display/dist/index.min.js"></script> -->
+    <script src="./src/pixi-live2d-display.min.js"></script>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/animejs/dist/bundles/anime.umd.min.js"></script> -->
+    <script type="module" crossorigin src="/assets/index-Deys3EfR.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-FtFdnYa4.css">
+  </head>
+  <body>
+    
+    <nav id="sidebar" class="collapsed">
+      
+      <div class="sidebar-top">
+        <button id="sidebar-toggle-btn" title="Toggle Menu">
+          <span>&raquo;</span>
+        </button>
+      
+        <div class="sidebar-content">
+
+          <div class="sidebar-section">
+            <button class="sidebar-btn sidebar-toggle" id="btn-guided">
+              <span class="icon">1</span> 
+              <span class="text" data-i18n="mode_guided">Fully Guided Exploration</span>
+            </button>
+            
+          <div class="parameter-area" id="params-guided">
+            <div class="parameter-content">
+              
+              <div class="filter-section">
+                <h4 style="margin: 0 0 8px 0; font-size: 0.85em; color: #aaa; text-transform: uppercase; letter-spacing: 1px;" data-i18n="header_spatial">
+                  1. Spatial Filters
+                </h4>
+
+                <div id="spatial-builder-container"></div>
+                
+                
+                <button class="param-btn" id="add-spatial-btn" style="width: 100%; background: #444; margin-top: 5px;" data-i18n="btn_add_location">
+                  + Add Location
+                </button>
+              </div>
+
+              <hr style="border: 0; border-top: 1px dashed #444; margin: 15px 0;">
+
+              <div class="filter-section">
+                <h4 style="margin: 0 0 8px 0; font-size: 0.85em; color: #aaa; text-transform: uppercase; letter-spacing: 1px;" data-i18n="header_semantic">
+                  2. Semantic Filters
+                </h4>
+                
+                <div id="query-builder-container"></div>
+                
+                <div class="query-actions" style="margin-top: 10px; display: flex; gap: 5px;">
+                  <button class="param-btn" id="add-condition-btn" style="flex: 0 0 40px; background: #444;" title="Add Condition">+</button>
+                  <button class="param-btn" id="apply-filter-btn" style="flex: 1;" data-i18n="btn_query">Query</button>
+                </div>
+                
+                <!-- <button class="param-btn" id="reset-all-btn" style="width: 100%; margin-top: 10px; background: #333; border: 1px solid #555;">Reset All</button> -->
+              </div>
+
+            </div>
+          </div>
+          </div>
+
+          <div class="sidebar-section">
+            <button class="sidebar-btn sidebar-toggle" id="btn-semi">
+              <span class="icon">2</span> 
+              <span class="text" data-i18n="mode_semi">Semi Guided Exploration</span>
+            </button>
+            <div class="parameter-area" id="params-semi">
+              <div class="parameter-content">
+                <label data-i18n="label_destination">Destination:</label>
+                <input type="text" id="semi-search-input" data-i18n="placeholder_semi" placeholder="e.g. Science Museum">
+                <button class="param-btn" id="semi-search-btn" data-i18n="btn_navigate">Navigate</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <button class="sidebar-btn" id="btn-free">
+              <span class="icon">3</span> 
+              <span class="text" data-i18n="mode_free">Free Exploration</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <div id="results-panel" class="hidden">
+        <div class="results-header">
+          <h4 data-i18n="header_results">Query Results</h4>
+          <span id="results-count" data-i18n="no_results" style="font-size: 0.8em; color: #aaa; margin-left: 5px;">(0)</span>
+          </div>
+        <ul id="results-list">
+          </ul>
+      </div>
+
+    </nav>
+
+    <div id="cesium-container"></div>
+
+    <div id="mode-indicator">Current Mode: Free Exploration</div>
+
+
+  
+    <div id="top-right-container">
+        
+        <div id="legend-panel">
+          <h4 data-i18n="legend_title">Legend</h4>
+          <div class="legend-item">
+            <span class="symbol point-red"></span> <span data-i18n="legend_selected">Selected</span>
+          </div>
+          <div class="legend-item">
+            <span class="symbol point-white"></span> <span data-i18n="legend_museum">Museum</span>
+          </div>
+          <div class="legend-item">
+            <span class="symbol poly-orange"></span> <span data-i18n="google_mode">Google 3D Mode</span>
+          </div>
+        </div>
+
+
+        <button id="mock-login-btn">Mode: Guest</button>
+
+        <div id="lang-switch">
+          <button onclick="window.i18n.setLanguage('en')">EN</button> | 
+          <button onclick="window.i18n.setLanguage('zh')">中文</button> |
+          <button onclick="window.i18n.setLanguage('de')">DE</button>
+        </div>
+
+        <!-- <div class="control-row" style="margin-top:5px;">
+            <label class="switch-google">
+                <input type="checkbox" id="google-mode-toggle">
+                <span class="slider"></span>
+                <span class="label-text">Google 3D Mode</span>
+            </label>
+        </div> -->
+
+    </div>
+
+    <div id="agent-container" class="hidden">
+        <!-- <svg id="route-overlay-layer" class="overlay-layer"></svg> -->
+        
+
+        <div id="agent-dialog-box" class="hidden">
+            <div class="agent-header">
+                <span class="agent-name" data-i18n="agent_name">Navi-AI</span>
+                <button data-i18n="agent_reset_result" class="close-dialog-btn">×</button>
+            </div>
+            <div class="chat-history" id="chat-history">
+                <div class="msg system" data-i18n="agent_welcome">Hello! I am the collective consciousness of this museum space. How can I guide your research today?</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="agent-input" placeholder="Type your learning goal..." autocomplete="off" data-i18n="placeholder_agent">
+                <button id="agent-send-btn">➤</button>
+                <!-- <textarea 
+                    id="naviai-input" 
+                    placeholder="Chat with AI Agent..." 
+                    rows="1" 
+                    autocomplete="off"></textarea>
+
+                <button id="naviai-send-btn">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button> -->
+            </div>
+        </div>
+
+        <!-- <div id="agent-avatar" class="avatar-breathing">
+            <img src="https://api.iconify.design/carbon:ibm-watson-discovery.svg?color=%237209b7" alt="AI Agent" class="avatar-img">
+            </div> -->
+
+      <div id="agent-avatar" class="avatar-container">
+          <canvas id="live2d-canvas"></canvas>
+      </div>
+    </div>
+
+    <div id="user-profile-widget">
+        
+        <div id="user-avatar-btn" class="user-avatar" title="User Dashboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span id="auth-status-dot" class="status-dot offline"></span>
+        </div>
+
+        <div id="user-panel" class="user-panel hidden">
+            
+            <button id="close-panel-btn" class="fullscreen-close-btn">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="panel-inner">
+                
+                <div class="panel-header">
+                    <div class="user-id-card">
+                        <h2 id="panel-username">Guest Visitor</h2>
+                        <span id="panel-role" class="badge">Local Mode</span>
+                    </div>
+                </div>
+
+                <div class="panel-tabs">
+                    <button class="tab-btn active" data-tab="stats">📊 Statistics</button>
+                    <button class="tab-btn" data-tab="feedback">📝 Feedback</button>
+                    <button class="tab-btn" data-tab="vgi">📍 VGI Contribution</button>
+                    <button class="tab-btn" data-tab="settings">⚙️ Settings</button>
+                </div>
+
+                <div class="panel-content">
+                    <div id="tab-stats" class="tab-pane active">
+                        <div class="stat-grid">
+                            <div class="stat-card"><h3>12</h3><small>Museums</small></div>
+                            <div class="stat-card"><h3>4.5km</h3><small>Distance</small></div>
+                            <div class="stat-card"><h3>2h</h3><small>Time</small></div>
+                        </div>
+                    </div>
+
+                    <div id="tab-feedback" class="tab-pane">
+                        
+
+                        <div class="big-action-card">
+                            <h3>User Preference Initialization</h3>
+                            <p style="margin: 5px 0 0 0; font-size: 0.9em; color: #888;">Tell the suggestion engine what you like, and it'll make the experience adapt to your preference.</p>
+                            <p></p>
+                            <button id="btn-open-questionnaire" class="action-btn large">Start Questionnaire</button>
+                        </div>
+
+                        <hr style="border: 0; border-top: 1px dashed rgba(255,255,255,0.1); margin: 20px 0;">
+
+                        <div class="action-card">
+                            <div style="justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h3>📊 System Evaluation Survey</h3>
+                                    <p style="margin: 5px 0 0 0; font-size: 0.9em; color: #888;">
+                                        Help us compare NaviMus with traditional museum search tools.
+                                    </p>
+                                </div>
+                                <p></p>
+                                <button id="btn-open-eval" class="submit-btn" style="width: auto; padding: 8px 20px;">
+                                    Take Survey
+                                </button>
+                            </div>
+                        </div>
+
+                        <hr style="border: 0; border-top: 1px dashed rgba(255,255,255,0.1); margin: 20px 0;">
+                        
+                        <div class="action-card">
+                            <h3>General Comment</h3>
+                            <textarea placeholder="Any bugs or feature requests?" rows="2"></textarea>
+                            <button class="submit-btn disabled-if-guest">Submit Comment</button>
+                        </div>
+
+
+                    </div>
+
+                    <div id="tab-vgi" class="tab-pane">
+                        <div class="vgi-form">
+                            <input type="text" placeholder="Location Name" class="input-dark">
+                            <select class="input-dark"><option>Wrong Info</option></select>
+                            <button class="submit-btn disabled-if-guest">Submit Data</button>
+                        </div>
+                    </div>
+
+                    <div id="tab-settings" class="tab-pane">
+                        <div class="setting-row">
+                            <span>Dark Mode</span>
+                            <input type="checkbox" id="theme-toggle">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-footer">
+                    <div class="data-privacy-toggle">
+                        <label><input type="checkbox" id="data-share-toggle" disabled> Share anonymous usage data</label>
+                    </div>
+                    <button id="auth-action-btn" class="auth-btn">Log In / Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="questionnaire-modal" class="modal-overlay hidden">
+        <div class="modal-glass-card">
+            <div class="modal-header">
+                <h2>✨ Customize Your Trip</h2>
+                <button id="close-quest-btn" class="close-icon-btn">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <p class="subtitle">Tell the suggestion engine your preferences to better adapt to your preferences.</p>
+                
+                <div class="form-group">
+                    <label>🎯 What are you interested in?</label>
+                    <div class="tags-input">
+                        <label class="tag-checkbox"><input type="checkbox" value="Art"><span>🎨 Art</span></label>
+                        <label class="tag-checkbox"><input type="checkbox" value="History"><span>📜 History</span></label>
+                        <label class="tag-checkbox"><input type="checkbox" value="Science"><span>🚀 Science</span></label>
+                        <label class="tag-checkbox"><input type="checkbox" value="Nature"><span>🌿 Nature</span></label>
+                        <label class="tag-checkbox"><input type="checkbox" value="Other"><span>🍺 Other</span></label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>⏳ How much time do you have?</label>
+                    <select id="quest-duration" class="input-light">
+                        <option value="2h">Quick Visit (2 Hours)</option>
+                        <option value="4h" selected>Half Day (4 Hours)</option>
+                        <option value="8h">Full Day (8 Hours)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>r/ Pace Preference</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="pace" value="relaxed" checked> ☕ Relaxed</label>
+                        <label><input type="radio" name="pace" value="intense"> ⚡ Efficient</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="btn-cancel-quest" class="btn-text">Cancel</button>
+                <button id="btn-submit-quest" class="btn-primary">Update</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="evaluation-modal" class="modal-overlay hidden">
+        <div class="modal-glass-card"> 
+            
+            <div class="modal-header">
+                <h2>🧪 System Experience Evaluation</h2>
+                <button id="close-eval-btn" class="close-icon-btn">&times;</button>
+            </div>
+            
+            <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+                <p class="subtitle">Please evaluate based on your experience with NaviMus.</p>
+                
+                <div class="form-group">
+                    <label>1. Efficiency Comparison</label>
+                    <p style="font-size: 0.85em; color: #666; margin-bottom: 8px;">
+                        Compared to traditional list-based searching, how efficient was the Spatial Map?
+                    </p>
+                    <div class="range-slider-group">
+                        <span class="range-label">Traditional is better</span>
+                        <input type="range" min="1" max="5" value="3" class="eval-range" id="eval-efficiency">
+                        <span class="range-label">NaviMus is better</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>2. Mode Evaluation</label>
+                    <div class="radio-group-vertical" style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="font-weight: normal; font-size: 0.9em;">
+                            <strong>Unsupervised Mode:</strong> How intuitive was the heatmap?
+                        </label>
+                        <div class="star-rating">
+                            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                            <input type="hidden" id="eval-unsupervised" value="0">
+                        </div>
+
+                        <label style="font-weight: normal; font-size: 0.9em; margin-top: 5px;">
+                            <strong>Supervised Mode:</strong> Did the AI route match your preference?
+                        </label>
+                        <div class="star-rating">
+                            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                            <input type="hidden" id="eval-supervised" value="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>3. Interaction & Immersion</label>
+                    <select id="eval-immersion" class="input-light">
+                        <option value="1">No, text is clearer.</option>
+                        <option value="3" selected>Somewhat enhanced.</option>
+                        <option value="5">Significantly enhanced.</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="btn-cancel-eval" class="btn-text">Close</button>
+                <button id="btn-submit-eval" class="btn-primary">Submit Evaluation</button>
+            </div>
+        </div>
+    </div>
+
+
+  </body>
+</html>
