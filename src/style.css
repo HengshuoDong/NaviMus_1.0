@@ -1,0 +1,1322 @@
+html,
+body,
+#cesium-container {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* 防止出现不必要的滚动条 */
+}
+
+/* =========================================
+   1. Sidebar (左侧栏 - 核心布局)
+   ========================================= */
+#sidebar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100vh; /* 占满全高 */
+  background-color: rgba(28, 28, 30, 0.95);
+  color: white;
+  
+  /* 关键优先级：Sidebar(20000) > Tippy(10000) > Legend(10) > Map(0) */
+  z-index: 1000; 
+  
+  /* Flex 布局：实现“上查下看”的结构 */
+  display: flex;
+  flex-direction: column; 
+  transition: width 0.3s ease;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+}
+
+/* 展开/折叠宽度控制 */
+#sidebar.collapsed { width: 60px; }
+#sidebar:not(.collapsed) { width: 320px; }
+
+/* --- 区域 A: 上半部分 (功能菜单 & 查询构建器) --- */
+.sidebar-top {
+  flex: 0 0 auto; /* 高度随内容自动撑开，不拉伸 */
+  border-bottom: 1px solid #444;
+  max-height: 60vh; /* 防止查询区太高，挤占结果区 */
+  overflow-y: auto; /* 如果查询条件太多，允许内部滚动 */
+}
+
+/* --- 区域 B: 下半部分 (结果列表) --- */
+/* 注意：这是嵌入式样式，不再悬浮 */
+#results-panel {
+  flex: 1 1 auto; /* 自动占据剩余的所有空间 */
+  overflow: hidden; /* 隐藏溢出，由内部的 list 负责滚动 */
+  display: flex;
+  flex-direction: column;
+  background: none; /* 融入侧边栏背景 */
+  border-top: 1px solid #222;
+}
+
+/* 当处于 Free 模式或无结果时隐藏 */
+#results-panel.hidden {
+  display: none;
+}
+
+.results-header {
+  padding: 10px 15px;
+  background: rgba(0,0,0,0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+#results-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto; /* 关键：只有列表区域可以滚动 */
+  flex-grow: 1;     /* 填满面板剩余空间 */
+  padding-bottom: 20px;
+}
+
+/* 列表项样式 */
+#results-list li {
+  padding: 12px 15px;
+  border-bottom: 1px solid #3a3a3a;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 0.9rem;
+}
+
+#results-list li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 列表项被选中时的样式 (联动高亮) */
+#results-list li.active {
+  background-color: rgba(217, 4, 41, 0.2); /* 红色高亮背景 */
+  border-left: 4px solid #D90429; /* 红色左边框 */
+}
+
+
+/* =========================================
+   2. Sidebar 内部组件样式
+   ========================================= */
+
+/* 按钮通用样式 */
+.sidebar-btn,
+#sidebar-toggle-btn {
+  width: 100%;
+  background: none;
+  border: none;
+  color: white;
+  padding: 15px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 折叠时居中 */
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.sidebar-btn:hover,
+#sidebar-toggle-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* 微妙的高亮 */
+}
+
+/* 激活状态的按钮 (红色高亮) */
+.sidebar-btn.active-toggle {
+  background-color: #D90429; 
+}
+
+/* 图标与文字 */
+.sidebar-btn .icon {
+  font-size: 1.2rem;
+  font-weight: bold;
+  width: 60px; /* 固定宽度以确保对齐 */
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.sidebar-btn .text {
+  opacity: 0;
+  width: 0;
+  transition: opacity 0.2s ease, width 0.2s ease;
+}
+
+/* 展开时的文字显示 */
+#sidebar:not(.collapsed) .sidebar-btn {
+  justify-content: flex-start;
+  padding-left: 0;
+}
+#sidebar:not(.collapsed) .sidebar-btn .text {
+  opacity: 1;
+  width: auto;
+}
+
+/* 交互优化：折叠时禁用内部点击 */
+#sidebar.collapsed .sidebar-content {
+  pointer-events: none;
+}
+#sidebar:not(.collapsed) .sidebar-content {
+  pointer-events: auto;
+}
+
+/* 切换按钮箭头旋转 */
+#sidebar.collapsed #sidebar-toggle-btn span { transform: rotate(0deg); }
+#sidebar:not(.collapsed) #sidebar-toggle-btn span { transform: rotate(180deg); }
+
+
+/* =========================================
+   3. 参数区 & 查询构建器 (Accordion)
+   ========================================= */
+.parameter-area {
+  background-color: #222; /* 比侧边栏稍深，区分层级 */
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease-out;
+}
+
+.parameter-area.active {
+  max-height: 400px; /* 允许展开足够的高度 */
+  border-bottom: 1px solid #444;
+  overflow-y: auto; /* 防止内容过多被截断 */
+}
+
+.parameter-content {
+  padding: 15px;
+}
+
+/* 查询行样式 */
+.query-row {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.query-row select, .query-row input {
+  background: #333;
+  border: 1px solid #555;
+  color: white;
+  padding: 6px;
+  border-radius: 4px;
+  width: 100%;
+  font-size: 0.85rem;
+}
+
+.remove-row-btn {
+  background: none;
+  border: none;
+  color: #ff4d4d;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding: 0 5px;
+}
+
+/* 通用小按钮 */
+.param-btn {
+  background-color: #D90429;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  margin-top: 5px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+.param-btn:hover { background-color: #b00320; }
+
+
+
+/* 1. 让容器变成横向弹性盒子 */
+#params-semi .parameter-content {
+    display: flex;           /* 启用 Flex */
+    flex-direction: row;     /* 横向排列 */
+    align-items: center;     /* 垂直居中对齐 */
+    gap: 8px;                /* 控件之间的间隙 */
+    width: 95%;             /* 占满父容器宽度 */
+}
+
+/* 2. 标签 "Destination:" */
+#params-semi label {
+    margin-bottom: 0;        /* 去掉原本可能有的下边距 */
+    white-space: nowrap;     /* 强制不换行 */
+    flex-shrink: 0;          /* 防止标签被挤压 */
+    /* 如果侧边栏太窄，觉得标签占地儿，可以把下面这行取消注释来隐藏它 */
+    /* display: none; */ 
+}
+
+/* 3. 输入框: 自动拉伸 */
+#semi-search-input {
+    flex: 1;                 /* 自动占据剩余所有空间 */
+    width: auto;             /* 覆盖可能存在的 width: 100% */
+    min-width: 0;            /* 防止在极窄情况下溢出 */
+    margin: 0;               /* 去掉边距 */
+}
+
+/* 4. 按钮: 紧凑排列 */
+#semi-search-btn {
+    flex-shrink: 0;          /* 禁止按钮变形压缩 */
+    width: auto;             /* 宽度随文字自适应 */
+    margin: 0;               /* 去掉边距 */
+    white-space: nowrap;
+}
+
+/* =========================================
+   4. 辅助面板 (图例、语言、提示条)
+   ========================================= */
+
+/* 顶部模式提示 */
+#mode-indicator {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5; 
+  background-color: rgba(28, 28, 30, 0.8);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  pointer-events: none;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: opacity 0.3s;
+}
+/* 侧边栏展开时隐藏提示，避免视觉杂乱 */
+#sidebar:not(.collapsed) ~ #mode-indicator {
+  opacity: 0;
+}
+
+/* 右下角图例 */
+#legend-panel {
+  position: absolute;
+  top: 60px;
+  right: 10px;
+  background: rgba(28, 28, 30, 0.8);
+  padding: 15px;
+  border-radius: 8px;
+  color: white;
+  z-index: 10;
+  border: 1px solid #555;
+  font-size: 0.85rem;
+  backdrop-filter: blur(5px);
+}
+#legend-panel h4 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
+
+.legend-item { display: flex; align-items: center; margin-top: 8px; }
+.symbol { width: 12px; height: 12px; margin-right: 8px; border-radius: 50%; display: inline-block; }
+.point-red { background: #D90429; border: 2px solid white; }
+.point-white { background: white; border: 2px solid #D90429; }
+.poly-orange { background: rgba(244, 162, 97, 0.4); border-radius: 2px; width: 14px; height: 14px; }
+
+/* 右上角语言切换 */
+#lang-switch {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  background: rgba(28, 28, 30, 0.8);
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: 1px solid #555;
+}
+#lang-switch button {
+  background: none; border: none; color: #ccc; cursor: pointer; font-size: 0.85rem;
+}
+#lang-switch button:hover { color: white; text-decoration: underline; }
+
+
+/* =========================================
+   5. 第三方库样式覆盖
+   ========================================= */
+
+/* Tippy.js: 确保层级正确 (低于 Sidebar) */
+.tippy-box {
+  z-index: 10000 !important; 
+}
+
+/* --- 关键修复：折叠时彻底隐藏结果栏 --- */
+#sidebar.collapsed #results-panel {
+  display: none !important;
+}
+
+/* 空间选择组 */
+.spatial-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fixed-filter {
+  width: 100%;
+  background: #222; /* 比动态行稍深，表示它是“基础” */
+  border: 1px solid #555;
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.fixed-filter:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #1a1a1a;
+}
+
+/* 语义动态行 (保持你之前的样式，微调间距) */
+.query-row {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 8px;
+  align-items: center;
+  background: #333; /* 动态行背景稍亮 */
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #444;
+}
+
+/* 去掉动态行内部 select/input 的边框，让它看起来像一行整体 */
+.query-row select, .query-row input {
+  border: none;
+  padding: 3px;
+}
+
+/* 空间筛选行：横向布局 */
+.spatial-row {
+  display: flex;           /* 关键：横向排列 */
+  gap: 5px;               /* 间隔 */
+  margin-bottom: 8px;
+  align-items: center;
+  background: #333;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #444;
+  position: relative; /* 为了定位删除按钮 */
+  padding-right: 25px; /* 给删除按钮留出空间 */
+}
+
+
+/* 让 3 个下拉菜单平分宽度 */
+.spatial-row select {
+  border-radius: 4px;
+  flex: 1;             /* 均分宽度 */
+  width: 0;            /* 关键：防止内容撑破布局 */
+  background: #333;
+  border: none;
+  color: white;
+  font-size: 0.8rem;   /* 稍微调小字体以适应宽度 */
+  padding: 4px 0;
+  text-overflow: ellipsis; /* 文字过长显示省略号 */
+}
+
+/* 分隔线 (可选，为了区分菜单) */
+.spatial-row select:not(:last-of-type) {
+  border-right: 1px solid #555;
+}
+
+/* 删除按钮 */
+.spatial-remove-btn {
+  position: absolute;
+  right: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #ff4d4d;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.1rem;
+  padding: 0 5px;
+}
+
+
+/* 登录按钮 / 模式切换按钮 */
+#mock-login-btn {
+    position: absolute;
+    top: 400px;          /* 距离顶部 */
+    right: 10px;        /* 距离右侧 */
+    z-index: 500;       /* 保证在地图之上 */
+    
+    /* 简单的按钮样式美化 */
+    background: rgba(40, 40, 40, 0.85);
+    color: white;
+    border: 1px solid #555;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    font-family: sans-serif;
+}
+
+#mock-login-btn:hover {
+    background: rgba(60, 60, 60, 0.95);
+}
+
+/* 如果你有图例，可以让它在按钮下面 */
+.legend-box {
+    top: 70px !important; /* 让出按钮的位置 */
+    right: 20px !important;
+    z-index: 500 !important;
+}
+
+
+
+/* --- Agent Container --- */
+/* client/style.css */
+
+#agent-container {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 2000 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    pointer-events: none;
+    
+    /* ✨ 新增：添加过渡动画 */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#agent-container.hidden {
+    /* display: none;  ❌ 删除这一行！这是导致模型消失的元凶 */
+    
+    /* ✨ 新增：用透明度隐藏 */
+    opacity: 0;
+    pointer-events: none; /* 让鼠标能穿透，点不到它 */
+    transform: translateY(20px); /* 稍微往下沉一点，增加动效 */
+    
+    /* 保持占位但不可见，防止 Canvas 尺寸坍塌 */
+    visibility: hidden; 
+}
+
+/* client/style.css */
+
+#agent-avatar {
+    /* 这是我们在屏幕上看到的实际大小 */
+    width: 200px; 
+    height: 200px;
+    
+    /* 定位保持不变 */
+    background: rgba(0, 0, 0, 0.4); /* 背景稍微淡一点，突出模型 */
+    border: 2px solid #7209b7;
+    border-radius: 50%;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* 关键：允许内容溢出圆圈（可选，如果你想让头伸出来就把这行删掉或改成 visible）*/
+    /*   <-- 建议先保留，做成圆头像 */
+    overflow: hidden;
+    pointer-events: auto;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(114, 9, 183, 0.5);
+    transition: transform 0.3s;
+}
+
+#live2d-canvas {
+    /* 关键：Canvas 元素本身要填满容器，但它的内部分辨率由 JS 控制 */
+    width: 100%;
+    height: 100%;
+    /* 稍微加点滤镜让它像全息投影 */
+    filter: drop-shadow(0 0 2px #7209b7);
+    
+}
+
+#agent-avatar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(114, 9, 183, 0.8);
+}
+
+.avatar-img {
+    width: 60%;
+    height: 60%;
+    filter: drop-shadow(0 0 5px #fff);
+}
+
+/* 模拟 Live2D 呼吸动画 */
+@keyframes breathe {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0); }
+}
+.avatar-breathing {
+    animation: breathe 3s ease-in-out infinite;
+}
+
+/* --- Dialog Box (The Mind) --- */
+#agent-dialog-box {
+    width: 300px;
+    height: 400px;
+    background: rgba(20, 20, 25, 0.9); /* 深色玻璃质感 */
+    backdrop-filter: blur(10px);
+    border: 1px solid #444;
+    border-left: 3px solid #7209b7;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    pointer-events: auto;
+    transition: opacity 0.3s, transform 0.3s;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+#agent-dialog-box.hidden {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    pointer-events: none;
+}
+
+.agent-header {
+    padding: 10px 15px;
+    background: rgba(114, 9, 183, 0.2);
+    border-bottom: 1px solid #444;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.agent-name {
+    font-weight: bold;
+    color: #e0aaff;
+    font-family: monospace;
+}
+
+.close-dialog-btn {
+    background: none;
+    border: none;
+    color: #e0e0e0;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.chat-history {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.msg {
+    padding: 8px 12px;
+    border-radius: 6px;
+    max-width: 85%;
+    line-height: 1.4;
+    /* 🔥 关键：保留空白符和换行符 */
+    white-space: pre-wrap; 
+    
+    /* 防止长单词撑破气泡 */
+    word-wrap: break-word; 
+    
+    /* 稍微调整一下行高，列表更好看 */
+    line-height: 1.5;
+}
+
+.msg.system {
+    align-self: flex-start;
+    background: #333;
+    color: #eee;
+    border-bottom-left-radius: 0;
+}
+
+.msg.user {
+    align-self: flex-end;
+    background: #7209b7;
+    color: #fff;
+    border-bottom-right-radius: 0;
+}
+
+.chat-input-area {
+    padding: 10px;
+    border-top: 1px solid #444;
+    display: flex;
+    gap: 5px;
+}
+
+#agent-input {
+    flex: 1;
+    background: #111;
+    border: 1px solid #444;
+    color: white;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+#agent-send-btn {
+    background: #7209b7;
+    border: none;
+    color: white;
+    padding: 0 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+
+/* --- Shepherd.js Dark Theme 适配 --- */
+/* src/style.css - 方案 A: 极致高亮白 */
+
+/* 1. 确保遮罩层在最上面 */
+.shepherd-modal-overlay-container {
+    z-index: 9999 !important; 
+}
+
+/* 2. 引导卡片样式 */
+.shepherd-element {
+    background: #ffffff !important;       /* 纯白背景 */
+    color: #333333 !important;            /* 深灰字体 */
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3); /* 柔和阴影 */
+    max-width: 400px !important;
+    border-radius: 12px !important;
+    z-index: 10000 !important;
+}
+
+/* 标题栏 */
+.shepherd-header {
+    background: #f8f9fa !important;       /* 浅灰标题背景 */
+    border-bottom: 1px solid #eee;
+    padding: 15px 20px !important;
+    border-radius: 12px 12px 0 0 !important;
+}
+
+.shepherd-title {
+    font-size: 1.2rem !important;
+    font-weight: 700 !important;
+    color: #000 !important;
+}
+
+/* 正文 */
+.shepherd-text {
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+    padding: 20px !important;
+    color: #444 !important;
+}
+
+/* 底部按钮区 */
+.shepherd-footer {
+    padding: 0 20px 20px !important;
+}
+
+/* 主按钮 (高亮蓝) */
+.shepherd-button {
+    background: #007aff !important;
+    color: #ffffff !important;
+    border-radius: 6px !important;
+    border: none;
+    padding: 10px 24px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.shepherd-button:hover {
+    background: #005bb5 !important;
+}
+
+/* 次要按钮 (灰) */
+.shepherd-button-secondary {
+    background: #f0f0f0 !important;
+    color: #666 !important;
+    margin-right: 10px;
+}
+
+.shepherd-button-secondary:hover {
+    background: #e0e0e0 !important;
+    color: #333 !important;
+}
+
+/* 箭头颜色 (必须和背景一致) */
+.shepherd-arrow:before {
+    background: #ffffff !important; 
+}
+
+
+/* Google Mode Switch */
+.switch-google {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #ccc;
+    background: rgba(0,0,0,0.3);
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 1px solid #444;
+}
+
+.switch-google input {
+    display: none; /* 隐藏原生 checkbox */
+}
+
+.slider {
+    width: 30px;
+    height: 16px;
+    background-color: #555;
+    border-radius: 15px;
+    position: relative;
+    transition: 0.3s;
+}
+
+.slider:before {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+input:checked + .slider {
+    background-color: #4285F4; /* Google Blue */
+}
+
+input:checked + .slider:before {
+    transform: translateX(14px);
+}
+
+input:checked ~ .label-text {
+    color: white;
+    font-weight: bold;
+    text-shadow: 0 0 5px #4285F4;
+}
+
+/* --- User Dashboard Panel --- */
+
+/* 1. 触发器容器 (右上角头像) */
+#user-profile-widget {
+    position: absolute;
+    top: 10px;
+    right: 170px;
+    z-index: 2000;
+}
+
+/* 头像按钮 (浅色版) */
+.user-avatar {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    /* 浅灰色磨砂底 */
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 0, 0, 0.1); /* 浅边框 */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.3s;
+    color: #333; /* 图标变深色 */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* 柔和阴影 */
+}
+.user-avatar:hover { 
+    background: #fff; 
+    transform: scale(1.05);
+    color: #D90429; /* 悬停强调色 */
+}
+.user-avatar svg { width: 24px; height: 24px; }
+
+/* 状态灯 */
+.status-dot {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid #fff; /* 白边 */
+}
+.status-dot.online { background-color: #2ecc71; }
+.status-dot.offline { background-color: #bdc3c7; }
+
+/* =========================================
+   2. 全屏面板 (Light Overlay)
+   ========================================= */
+.user-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    
+    /* 🔥 浅色全屏背景：带一点点灰蓝的白，显得干净 */
+    background: rgba(245, 247, 250, 0.7);
+    backdrop-filter: blur(25px); /* 强磨砂 */
+    -webkit-backdrop-filter: blur(25px); /* Safari 兼容 */
+    
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* 动画 */
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 0.3s;
+    
+    /* 🛠️ 关键修复：确保面板打开时能接收点击 */
+    pointer-events: auto; 
+}
+
+/* 隐藏状态 */
+.user-panel.hidden {
+    opacity: 0;
+    visibility: hidden;
+    /* 🛠️ 关键：隐藏时让鼠标穿透，点击地图 */
+    pointer-events: none; 
+}
+
+/* 内部居中容器 */
+.panel-inner {
+    width: 800px;
+    max-width: 90%;
+    height: 80vh;
+    
+    /* 🔥 卡片背景：纯白 */
+    background: #ffffff;
+    /* 边框：极淡的灰 */
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    
+    /* 🔥 阴影：大而柔和的投影，制造悬浮感 */
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    position: relative;
+    color: #1d1d1f; /* 苹果风深灰字体 */
+}
+
+/* 右上角关闭按钮 */
+.fullscreen-close-btn {
+    position: absolute;
+    top: 25px;
+    right: 30px;
+    background: none;
+    border: none;
+    color: #454545;
+    cursor: pointer;
+    transition: 0.2s;
+    z-index: 10000;
+}
+.fullscreen-close-btn:hover {
+    color: #D90429;
+    transform: rotate(90deg);
+}
+
+/* --- Header --- */
+.panel-header {
+    padding: 30px 40px;
+    border-bottom: 1px solid #f0f0f0;
+}
+.panel-header h2 { margin: 0; font-size: 2em; color: #111; font-weight: 700; }
+.badge { 
+    font-size: 0.75em; padding: 4px 8px; 
+    background: #f0f0f0; border-radius: 6px; color: #666; 
+    margin-top: 5px; display: inline-block;
+}
+.badge.active { background: #ffebeb; color: #D90429; }
+
+/* --- Tabs --- */
+.panel-tabs {
+    padding: 0 40px;
+    background: #fafafa; /* 标签栏稍微灰一点，区分层级 */
+    border-bottom: 1px solid #e5e5e5;
+}
+.tab-btn {
+    padding: 18px 5px;
+    font-size: 1rem;
+    margin-right: 30px;
+    background: none;
+    border: none;
+    color: #888;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: 0.2s;
+}
+.tab-btn:hover { color: #333; }
+.tab-btn.active { 
+    color: #D90429; 
+    border-bottom-color: #D90429; 
+}
+
+/* --- Content --- */
+.panel-content {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+    background: #fff;
+}
+.tab-pane { display: none; animation: fadeIn 0.3s; }
+.tab-pane.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Stats Cards */
+.stat-grid { display: flex; gap: 20px; }
+.stat-card { 
+    flex: 1; 
+    padding: 25px; 
+    border-radius: 12px; 
+    text-align: center; 
+    background: #f8f9fa; /* 浅灰底 */
+    border: 1px solid #eee;
+    transition: transform 0.2s;
+}
+.stat-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+.stat-card h3 { font-size: 2.2em; margin: 0; color: #111; }
+.stat-card small { color: #666; font-weight: 600; font-size: 0.8em; letter-spacing: 1px; }
+
+/* Action Cards */
+.big-action-card, .action-card {
+    background: #f8f9fa;
+    border: 1px solid #eee;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+}
+.big-action-card h3 { margin-top: 0; color: #111; }
+.big-action-card p { color: #555; margin-bottom: 20px; }
+
+/* Forms & Inputs */
+input[type="text"], select, textarea, .input-dark {
+    width: 100%;
+    background: #fff;
+    border: 1px solid #ddd;
+    color: #333;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    font-size: 0.95em;
+    transition: border 0.2s;
+}
+input[type="text"]:focus, textarea:focus {
+    border-color: #D90429;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(217, 4, 41, 0.1);
+}
+
+/* Buttons */
+.action-btn { 
+    background: #D90429; 
+    color: white; 
+    border: none; 
+    padding: 12px 24px; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-weight: 600;
+    transition: background 0.2s;
+}
+.action-btn:hover { background: #b90322; }
+
+.submit-btn { 
+    width: 100%; 
+    background: #2a9d8f; 
+    color: white; 
+    border: none; 
+    padding: 10px; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-weight: 600; 
+}
+.submit-btn:hover { background: #21867a; }
+.submit-btn.disabled-if-guest { 
+    background: #e0e0e0; 
+    color: #999; 
+    cursor: not-allowed; 
+}
+
+/* --- Footer --- */
+.panel-footer {
+    padding: 20px 40px;
+    background: #f9f9f9;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+}
+.auth-btn { 
+    background: #fff; 
+    border: 1px solid #ddd; 
+    color: #333; 
+    padding: 8px 16px; 
+    border-radius: 20px; 
+    cursor: pointer; 
+    font-size: 0.9em; 
+    font-weight: 600;
+    transition: 0.2s;
+}
+.auth-btn:hover { border-color: #333; }
+.auth-btn.logout { border-color: #D90429; color: #D90429; }
+.auth-btn.logout:hover { background: #fff0f0; }
+.data-privacy-toggle { font-size: 0.9em; color: #666; }
+
+
+
+/* style.css - 问卷模态框样式 */
+
+/* 1. 遮罩层 (全屏背景) */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.2); /* 轻微变暗 */
+    backdrop-filter: blur(5px);      /* 背景轻微模糊 */
+    z-index: 20000; /* 比 Dashboard 更高 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.modal-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+/* 2. 问卷卡片 (浅色磨砂) */
+.modal-glass-card {
+    width: 500px;
+    max-width: 90%;
+    background: rgba(255, 255, 255, 0.9); /* 高不透明度白底 */
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px) scale(0.95); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* 3. 内容布局 */
+.modal-header {
+    padding: 20px 25px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.modal-header h2 { margin: 0; font-size: 1.5em; color: #333; }
+.close-icon-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #999; }
+.close-icon-btn:hover { color: #D90429; }
+
+.modal-body { padding: 25px; }
+.subtitle { margin-top: 0; color: #666; font-size: 0.9em; margin-bottom: 20px; }
+
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-weight: 600; color: #333; margin-bottom: 8px; font-size: 0.95em; }
+
+/* 标签选择器样式 */
+.tags-input { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag-checkbox input { display: none; } /* 隐藏原生 checkbox */
+.tag-checkbox span {
+    display: inline-block;
+    padding: 6px 14px;
+    background: #f0f0f0;
+    border-radius: 20px;
+    color: #555;
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-size: 0.9em;
+    transition: 0.2s;
+}
+/* 选中状态 */
+.tag-checkbox input:checked + span {
+    background: #ffebeb;
+    color: #D90429;
+    border-color: #D90429;
+    font-weight: 600;
+}
+
+/* 下拉框 & 单选 */
+.input-light {
+    width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; background: #fff;
+}
+.radio-group label { display: inline-flex; align-items: center; margin-right: 20px; font-weight: normal; cursor: pointer;}
+.radio-group input { margin-right: 6px; accent-color: #D90429; }
+
+/* 底部按钮 */
+.modal-footer {
+    padding: 20px 25px;
+    background: #f9f9f9;
+    border-top: 1px solid #eee;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+.btn-text { background: none; border: none; padding: 10px 20px; color: #666; cursor: pointer; font-weight: 600; }
+.btn-text:hover { color: #333; }
+.btn-primary { 
+    background: #D90429; color: white; border: none; padding: 10px 25px; 
+    border-radius: 8px; font-weight: 600; cursor: pointer; 
+    box-shadow: 0 4px 10px rgba(217, 4, 41, 0.3);
+    transition: 0.2s;
+}
+.btn-primary:hover { background: #b90322; transform: translateY(-2px); }
+
+
+/* style.css - 追加在文件末尾 */
+
+/* =========================================
+   🌙 Dark Mode Overrides (深色模式覆盖)
+   ========================================= */
+
+/* 1. 全屏背景变黑 */
+.user-panel.dark-mode {
+    background: rgba(10, 10, 10, 0.85);
+}
+
+/* 2. 卡片主体变深 */
+.user-panel.dark-mode .panel-inner {
+    background: #151515; /* 深灰背景 */
+    border-color: #333;
+    color: #eee;         /* 文字变白 */
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+/* 3. Header & Tabs 调整 */
+.user-panel.dark-mode .panel-header {
+    border-bottom-color: #333;
+}
+.user-panel.dark-mode .panel-header h2 {
+    color: #fff;
+}
+.user-panel.dark-mode .panel-tabs {
+    background: #1a1a1a;
+    border-bottom-color: #333;
+}
+.user-panel.dark-mode .tab-btn {
+    color: #888;
+}
+.user-panel.dark-mode .tab-btn:hover {
+    color: #fff;
+}
+.user-panel.dark-mode .tab-btn.active {
+    color: #D90429; /* 保持红色高亮 */
+}
+
+/* 4. 内容区域 & 卡片 */
+.user-panel.dark-mode .panel-content {
+    background: #151515;
+}
+
+/* 统计卡片 & 操作卡片 */
+.user-panel.dark-mode .stat-card,
+.user-panel.dark-mode .action-card,
+.user-panel.dark-mode .big-action-card {
+    background: #222;
+    border-color: #333;
+}
+.user-panel.dark-mode .stat-card h3,
+.user-panel.dark-mode .big-action-card h3 {
+    color: #fff;
+}
+.user-panel.dark-mode .stat-card small,
+.user-panel.dark-mode .big-action-card p {
+    color: #aaa;
+}
+
+/* 5. 输入框变深 */
+.user-panel.dark-mode input[type="text"], 
+.user-panel.dark-mode select, 
+.user-panel.dark-mode textarea,
+.user-panel.dark-mode .input-dark {
+    background: #000;
+    border-color: #444;
+    color: #fff;
+}
+.user-panel.dark-mode input[type="text"]:focus {
+    border-color: #D90429;
+}
+
+/* 6. Footer */
+.user-panel.dark-mode .panel-footer {
+    background: #1a1a1a;
+    border-top-color: #333;
+}
+.user-panel.dark-mode .auth-btn {
+    background: transparent;
+    border-color: #666;
+    color: #ddd;
+}
+.user-panel.dark-mode .auth-btn:hover {
+    border-color: #fff;
+    color: #fff;
+}
+
+/* style.css - 追加到末尾 */
+
+/* 评价滑块样式 */
+.range-slider-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0,0,0,0.05);
+    padding: 10px;
+    border-radius: 8px;
+}
+.range-label { font-size: 0.8em; color: #666; width: 80px; text-align: center; line-height: 1.2; }
+.eval-range { flex: 1; accent-color: #D90429; cursor: pointer; }
+
+/* 星星打分样式 */
+.star-rating {
+    font-size: 1.5rem;
+    color: #ddd;
+    cursor: pointer;
+    display: inline-block;
+}
+.star-rating span { transition: color 0.2s; }
+.star-rating span:hover,
+.star-rating span.selected {
+    color: #f1c40f; /* 金色 */
+}
+
+/* 深色模式适配 */
+.user-panel.dark-mode .range-slider-group { background: rgba(255,255,255,0.05); }
+.user-panel.dark-mode .range-label { color: #aaa; }
+
+
+.overlay-layer {
+    position: fixed; /* 强制固定在屏幕上 */
+    top: 0;
+    left: 0;
+    width: 100%;     /* 铺满全屏宽度 */
+    height: 100%;    /* 铺满全屏高度 */
+    
+    /* 🔥 关键层级设置 */
+    z-index: 500;    /* 必须大于 Cesium 地图(0)，但小于 UI 面板(1000+) */
+    
+    /* 🔥 交互穿透 */
+    pointer-events: none; /* 让鼠标点击穿透 SVG，否则你就没法拖动地图了！*/
+    
+    /* 视觉增强 */
+    filter: drop-shadow(0 0 5px rgba(217, 4, 41, 0.5)); /* 给线条整体加一点光晕 */
+}
+
+
+
+
